@@ -5,12 +5,13 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func parseCsvToDataStruct(path string) ([]apptypes.Data, error) {
+func ParseCsvToDataStruct(path string) ([]apptypes.Data, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Panicln("Open file error:", err)
@@ -23,12 +24,13 @@ func parseCsvToDataStruct(path string) ([]apptypes.Data, error) {
 		}
 	}(file)
 
-	scanner := bufio.NewScanner(file)
-	var result []apptypes.Data
+	var re = regexp.MustCompile(`[^\d\;\:]`)
 
+	var result []apptypes.Data
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		var dataTmp apptypes.Data
-		seperatedValues := strings.Split(strings.ReplaceAll(scanner.Text(), " ", ""), ";")
+		seperatedValues := strings.Split(re.ReplaceAllString(scanner.Text(), ""), ";")
 		err := parseCsvLine(&dataTmp, seperatedValues)
 		if err != nil {
 			return nil, err
