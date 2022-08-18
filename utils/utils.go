@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func ParseCsvToDataStruct(path string) ([]apptypes.Data, error) {
+func ParseCsvToDataStruct(path string) ([]apptypes.Train, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Panicln("Open file error:", err)
@@ -26,10 +26,10 @@ func ParseCsvToDataStruct(path string) ([]apptypes.Data, error) {
 
 	var re = regexp.MustCompile(`[^\d\;\:]`)
 
-	var result []apptypes.Data
+	var result []apptypes.Train
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		var dataTmp apptypes.Data
+		var dataTmp apptypes.Train
 		seperatedValues := strings.Split(re.ReplaceAllString(scanner.Text(), ""), ";")
 		err := parseCsvLine(&dataTmp, seperatedValues)
 		if err != nil {
@@ -40,7 +40,7 @@ func ParseCsvToDataStruct(path string) ([]apptypes.Data, error) {
 	return result, nil
 }
 
-func parseCsvLine(data *apptypes.Data, lines []string) error {
+func parseCsvLine(data *apptypes.Train, lines []string) error {
 	conv, err := strconv.Atoi(lines[0])
 	if err != nil {
 		return err
