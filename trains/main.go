@@ -1,12 +1,18 @@
 package main
 
 import (
+	"DistributedLab_Trains/algoritms"
 	"DistributedLab_Trains/utils"
-	"fmt"
+	"log"
 )
 
-const dataPath = "data/test_task_data.csv"
+const dataPath = "data/test_task_data_test.csv"
 
 func main() {
-	fmt.Println(utils.ParseCsvToDataStruct(dataPath))
+	allTrains, err := utils.ParseCsvToDataStruct(dataPath)
+	if err != nil {
+		log.Panicln(allTrains)
+		return
+	}
+	algoritms.BuildPaths(&allTrains)
 }
