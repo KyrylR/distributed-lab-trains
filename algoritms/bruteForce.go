@@ -7,15 +7,19 @@ import (
 func BuildPaths(data *[]Train) {
 	uniqueStations := GetUniqueStations(data, false)
 	mappedData := BuildMappedData(data)
-	for _, station := range uniqueStations {
-		pathTree := PathTree{DepartureId: station}
+	//for _, station := range uniqueStations {
+	for i := 0; i < 10000; i++ {
+
+		pathTree := PathTree{DepartureId: 1902}
 		treeMap := pathTree.buildPathTree(uniqueStations, mappedData)
 		pathTrees := getAllPathTrees(&pathTree, &treeMap)
 		ways := buildNewWaysFromPathTree(pathTrees, len(uniqueStations))
-		for _, way := range ways.Ways {
-			fmt.Println(way.Way)
-		}
+		//for _, way := range ways.Ways {
+		//	fmt.Println(way.Way)
+		//}
+		fmt.Println(len(ways.Ways))
 	}
+	//}
 }
 
 func buildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {

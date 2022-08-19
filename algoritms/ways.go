@@ -40,7 +40,7 @@ func (ways *Ways) addWay(newWay PossibleWay, pathNode *PathTree, maxStations int
 	return false
 }
 
-func (ways Ways) isWayNeeded(newWay []int) bool {
+func (ways *Ways) isWayNeeded(newWay []int) bool {
 	for _, way := range ways.Ways {
 		if way.isEqual(newWay) {
 			return false
@@ -86,7 +86,7 @@ func (w *PossibleWay) addNewWay(pathNode *PathTree, ways *Ways) bool {
 	return false
 }
 
-func (w PossibleWay) copy() []int {
+func (w *PossibleWay) copy() []int {
 	copiedWay := make([]int, len(w.Way))
 	for idx, item := range w.Way {
 		copiedWay[idx] = item
@@ -105,10 +105,10 @@ func (w *PossibleWay) addRoutes(pathNode *PathTree, toStation int) {
 	}
 }
 
-func (w PossibleWay) getLastStation() int {
+func (w *PossibleWay) getLastStation() int {
 	return w.Way[len(w.Way)-1]
 }
 
-func (w PossibleWay) isEqual(other []int) bool {
+func (w *PossibleWay) isEqual(other []int) bool {
 	return reflect.DeepEqual(w.Way, other)
 }
