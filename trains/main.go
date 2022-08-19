@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-const dataPath = "data/test_task_data_test.csv"
+const dataPath = "data/test_task_data.csv"
 
 func main() {
 	allTrains, err := utils.ParseCsvToDataStruct(dataPath)
