@@ -11,12 +11,3 @@ type Train struct {
 	DepartureTime      time.Time
 	ArrivalTime        time.Time
 }
-
-type PossibleWay struct {
-	Way      []int
-	TrainMap map[int][]Train
-}
-
-type Ways struct {
-	Ways []PossibleWay
-}
