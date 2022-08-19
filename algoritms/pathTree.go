@@ -6,7 +6,7 @@ type PathTree struct {
 	Next        []*PathTree
 }
 
-func (tree *PathTree) buildPathTree(uniqueStations []int, mappedData map[int][]Train) {
+func (tree *PathTree) buildPathTree(uniqueStations []int, mappedData map[int][]Train) map[int]*PathTree {
 	tree.Routes = mappedData[tree.DepartureId]
 
 	treeMap := make(map[int]*PathTree)
@@ -21,6 +21,7 @@ func (tree *PathTree) buildPathTree(uniqueStations []int, mappedData map[int][]T
 	for _, pathTree := range treeMap {
 		pathTree.fillPathTreeNext(&treeMap)
 	}
+	return treeMap
 }
 
 func (tree *PathTree) fillPathTreeNext(treeMap *map[int]*PathTree) {
