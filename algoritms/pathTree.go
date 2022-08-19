@@ -1,14 +1,12 @@
 package algoritms
 
-import "DistributedLab_Trains/apptypes"
-
 type PathTree struct {
 	DepartureId int
-	Routes      []apptypes.Train
+	Routes      []Train
 	Next        []*PathTree
 }
 
-func (tree *PathTree) buildPathTree(uniqueStations []int, mappedData map[int][]apptypes.Train) {
+func (tree *PathTree) buildPathTree(uniqueStations []int, mappedData map[int][]Train) {
 	tree.Routes = mappedData[tree.DepartureId]
 
 	treeMap := make(map[int]*PathTree)
@@ -31,12 +29,12 @@ func (tree *PathTree) fillPathTreeNext(treeMap *map[int]*PathTree) {
 	}
 }
 
-func newPathTree(departure int, trains []apptypes.Train) *PathTree {
+func newPathTree(departure int, trains []Train) *PathTree {
 	newPathTree := PathTree{DepartureId: departure}
 	newPathTree.Routes = trains
 	return &newPathTree
 }
 
-func getArrivalStations(routes *[]apptypes.Train) []int {
+func getArrivalStations(routes *[]Train) []int {
 	return GetUniqueStations(routes, true)
 }

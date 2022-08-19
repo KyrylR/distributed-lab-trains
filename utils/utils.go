@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"DistributedLab_Trains/apptypes"
+	"DistributedLab_Trains/algoritms"
 	"bufio"
 	"log"
 	"os"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func ParseCsvToDataStruct(path string) ([]apptypes.Train, error) {
+func ParseCsvToDataStruct(path string) ([]algoritms.Train, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Panicln("Open file error:", err)
@@ -26,10 +26,10 @@ func ParseCsvToDataStruct(path string) ([]apptypes.Train, error) {
 
 	var re = regexp.MustCompile(`[^\d\;\:]`)
 
-	var result []apptypes.Train
+	var result []algoritms.Train
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		var dataTmp apptypes.Train
+		var dataTmp algoritms.Train
 		seperatedValues := strings.Split(re.ReplaceAllString(scanner.Text(), ""), ";")
 		err := parseCsvLine(&dataTmp, seperatedValues)
 		if err != nil {
@@ -40,7 +40,7 @@ func ParseCsvToDataStruct(path string) ([]apptypes.Train, error) {
 	return result, nil
 }
 
-func parseCsvLine(data *apptypes.Train, lines []string) error {
+func parseCsvLine(data *algoritms.Train, lines []string) error {
 	conv, err := strconv.Atoi(lines[0])
 	if err != nil {
 		return err

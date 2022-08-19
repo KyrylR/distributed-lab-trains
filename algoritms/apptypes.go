@@ -1,4 +1,4 @@
-package apptypes
+package algoritms
 
 import "time"
 
@@ -15,4 +15,8 @@ type Train struct {
 type PossibleWay struct {
 	Way      []int
 	TrainMap map[int][]Train
+}
+
+type Ways struct {
+	Ways []PossibleWay
 }
