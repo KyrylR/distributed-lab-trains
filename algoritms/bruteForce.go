@@ -4,22 +4,21 @@ import (
 	"fmt"
 )
 
-func BuildPaths(data *[]Train) {
+func BuildPaths(data *[]Train) []Ways {
 	uniqueStations := GetUniqueStations(data, false)
 	mappedData := BuildMappedData(data)
-	//for _, station := range uniqueStations {
-	for i := 0; i < 10000; i++ {
-
-		pathTree := PathTree{DepartureId: 1902}
+	result := make([]Ways, 0)
+	for _, station := range uniqueStations {
+		pathTree := PathTree{DepartureId: station}
 		treeMap := pathTree.buildPathTree(uniqueStations, mappedData)
 		pathTrees := getAllPathTrees(&pathTree, &treeMap)
 		ways := buildNewWaysFromPathTree(pathTrees, len(uniqueStations))
-		//for _, way := range ways.Ways {
-		//	fmt.Println(way.Way)
-		//}
-		fmt.Println(len(ways.Ways))
+		for _, way := range ways.Ways {
+			fmt.Println(way.Way)
+		}
+		result = append(result, ways)
 	}
-	//}
+	return result
 }
 
 func buildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {
