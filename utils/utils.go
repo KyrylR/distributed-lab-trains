@@ -78,9 +78,10 @@ func parseCsvLine(data *algoritms.Train, lines []string) error {
 	return nil
 }
 
-// timeTrack function is used to measure the execution time of a function.
+// TimeTrack function is used to measure the execution time of a function.
 // https://blog.stathat.com/2012/10/10/time_any_function_in_go.html
-func timeTrack(start time.Time, name string) {
+func TimeTrack(start time.Time, name string) time.Duration {
 	elapsed := time.Since(start)
 	log.Printf("%s took %s", name, elapsed)
+	return elapsed
 }
