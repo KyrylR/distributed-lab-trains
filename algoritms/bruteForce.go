@@ -1,7 +1,6 @@
 package algoritms
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -18,9 +17,6 @@ func BuildPaths(data *[]Train) []Ways {
 		treeMap := pathTree.buildPathTree(uniqueStations, mappedData)
 		pathTrees := getAllPathTrees(&pathTree, &treeMap)
 		ways := buildNewWaysFromPathTree(pathTrees, len(uniqueStations))
-		for _, way := range ways.Ways {
-			fmt.Println(way.Way)
-		}
 		result = append(result, ways)
 	}
 	return result
