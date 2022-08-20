@@ -32,7 +32,6 @@ func BuildPathsGo(data *[]Train) []Ways {
 	var wg sync.WaitGroup
 
 	worker := func(station int) {
-		wg.Add(1)
 		defer wg.Done()
 
 		pathTree := PathTree{DepartureId: station}
@@ -46,6 +45,7 @@ func BuildPathsGo(data *[]Train) []Ways {
 	}
 
 	for _, station := range uniqueStations {
+		wg.Add(1)
 		go worker(station)
 	}
 	wg.Wait()
