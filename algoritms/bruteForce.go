@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+// BuildPaths accepts the given data as an array of Train.
+// Builds the corresponding PathTree structure and uses it to find all paths from station to station
+// that can be reached with the corresponding trains.
+// Returns a slice of Ways, containing all `possible paths'.
 func BuildPaths(data *[]Train) []Ways {
 	uniqueStations := GetUniqueStations(data, false)
 	mappedData := BuildMappedData(data)
@@ -21,10 +25,14 @@ func BuildPaths(data *[]Train) []Ways {
 	return result
 }
 
+// buildNewWaysFromPathTree takes a PathTree slice and the number of unique stations in the data.
+// Creates an instance of Ways and starts `offering' it each PathTree as many times as the number
+// of unique stations in the data, starting with the specified one. At the end, clears each `incomplete' path and
+// returns the Ways object.
 func buildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {
 	ways := Ways{}
 
-	for i := 0; i < maxStations+1; i++ {
+	for i := 0; i < maxStations; i++ {
 		for _, offer := range pathTrees {
 			ways.proposeWay(offer, maxStations)
 		}
@@ -34,6 +42,7 @@ func buildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {
 	return ways
 }
 
+// getAllPathTrees takes a completed tree and its associated treeMap, returns a PathTree slice.
 func getAllPathTrees(tree *PathTree, treeMap *map[int]*PathTree) []*PathTree {
 	start := tree.DepartureId
 
