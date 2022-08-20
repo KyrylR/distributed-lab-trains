@@ -9,10 +9,8 @@ import (
 	"DistributedLab_Trains/utils"
 )
 
-const dataPath = "test_task_data.csv"
-
 func TestBuildPathExecutionTime(t *testing.T) {
-	allTrains, err := utils.ParseCsvToTrainStruct(dataPath)
+	allTrains, err := utils.ParseCsvToTrainStruct("data/test_task_data.csv")
 	if err != nil {
 		t.Errorf("error ocured when parsing csv file")
 		return

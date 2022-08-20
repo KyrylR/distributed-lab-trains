@@ -8,7 +8,7 @@ import (
 )
 
 func TestMyApproach(t *testing.T) {
-	allTrains, err := utils.ParseCsvToTrainStruct("data_for_tests.csv")
+	allTrains, err := utils.ParseCsvToTrainStruct("data/data_for_tests.csv")
 	if err != nil {
 		t.Errorf("error ocured when parsing csv file")
 		return
