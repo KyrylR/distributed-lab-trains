@@ -2,7 +2,7 @@ package algoritms
 
 import "time"
 
-// Train structure represent CSV from data file
+// Train structure represents a single entry in the CSV data file.
 type Train struct {
 	TrainId            int
 	DepartureStationId int
