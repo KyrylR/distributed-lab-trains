@@ -2,6 +2,7 @@ package algoritms
 
 import (
 	"fmt"
+	"sync"
 )
 
 // BuildPaths accepts the given data as an array of Train.
@@ -22,6 +23,36 @@ func BuildPaths(data *[]Train) []Ways {
 		}
 		result = append(result, ways)
 	}
+	return result
+}
+
+// BuildPathsGo is the same function as BuildPaths, but uses goroutines to speed up the search for all paths.
+func BuildPathsGo(data *[]Train) []Ways {
+	uniqueStations := GetUniqueStations(data, false)
+	mappedData := BuildMappedData(data)
+	result := make([]Ways, 0)
+
+	var mutex sync.Mutex
+	var wg sync.WaitGroup
+
+	worker := func(station int) {
+		wg.Add(1)
+		defer wg.Done()
+
+		pathTree := PathTree{DepartureId: station}
+		treeMap := pathTree.buildPathTree(uniqueStations, mappedData)
+		pathTrees := getAllPathTrees(&pathTree, &treeMap)
+		ways := buildNewWaysFromPathTree(pathTrees, len(uniqueStations))
+
+		mutex.Lock()
+		result = append(result, ways)
+		mutex.Unlock()
+	}
+
+	for _, station := range uniqueStations {
+		go worker(station)
+	}
+	wg.Wait()
 	return result
 }
 
