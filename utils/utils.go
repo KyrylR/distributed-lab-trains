@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"DistributedLab_Trains/algoritms"
 	"bufio"
 	"log"
 	"os"
@@ -9,9 +8,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"DistributedLab_Trains/algoritms"
 )
 
-func ParseCsvToDataStruct(path string) ([]algoritms.Train, error) {
+// ParseCsvToTrainStruct takes the path to a csv file in which entries are separated by `;` with the following
+// structure: `train number; departure station; arrival station; cost; departure time; arrival time; arrival time`.
+func ParseCsvToTrainStruct(path string) ([]algoritms.Train, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Panicln("Open file error:", err)
@@ -40,6 +43,7 @@ func ParseCsvToDataStruct(path string) ([]algoritms.Train, error) {
 	return result, nil
 }
 
+// parseCsvLine helps to write the string of data into the Train structure.
 func parseCsvLine(data *algoritms.Train, lines []string) error {
 	conv, err := strconv.Atoi(lines[0])
 	if err != nil {
