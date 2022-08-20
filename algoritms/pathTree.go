@@ -7,10 +7,10 @@ type PathTree struct {
 	Next        []*PathTree // Next - slice of stations that can be reached from the current one.
 }
 
-// buildPathTree fills each field in the PathTree structure with received information about unique stations,
+// BuildPathTree fills each field in the PathTree structure with received information about unique stations,
 // and all stations in map format, where key is the source station ID and value is a slice of
 // the corresponding `Train` structures.
-func (tree *PathTree) buildPathTree(uniqueStations []int, mappedData map[int][]Train) map[int]*PathTree {
+func (tree *PathTree) BuildPathTree(uniqueStations []int, mappedData map[int][]Train) map[int]*PathTree {
 	tree.Routes = mappedData[tree.DepartureId]
 
 	treeMap := make(map[int]*PathTree)

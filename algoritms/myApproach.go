@@ -14,9 +14,9 @@ func BuildPaths(data *[]Train) []Ways {
 	result := make([]Ways, 0)
 	for _, station := range uniqueStations {
 		pathTree := PathTree{DepartureId: station}
-		treeMap := pathTree.buildPathTree(uniqueStations, mappedData)
-		pathTrees := getAllPathTrees(&pathTree, &treeMap)
-		ways := buildNewWaysFromPathTree(pathTrees, len(uniqueStations))
+		treeMap := pathTree.BuildPathTree(uniqueStations, mappedData)
+		pathTrees := GetAllPathTrees(&pathTree, &treeMap)
+		ways := BuildNewWaysFromPathTree(pathTrees, len(uniqueStations))
 		result = append(result, ways)
 	}
 	return result
@@ -35,9 +35,9 @@ func BuildPathsGo(data *[]Train) []Ways {
 		defer wg.Done()
 
 		pathTree := PathTree{DepartureId: station}
-		treeMap := pathTree.buildPathTree(uniqueStations, mappedData)
-		pathTrees := getAllPathTrees(&pathTree, &treeMap)
-		ways := buildNewWaysFromPathTree(pathTrees, len(uniqueStations))
+		treeMap := pathTree.BuildPathTree(uniqueStations, mappedData)
+		pathTrees := GetAllPathTrees(&pathTree, &treeMap)
+		ways := BuildNewWaysFromPathTree(pathTrees, len(uniqueStations))
 
 		mutex.Lock()
 		result = append(result, ways)
@@ -52,11 +52,11 @@ func BuildPathsGo(data *[]Train) []Ways {
 	return result
 }
 
-// buildNewWaysFromPathTree takes a PathTree slice and the number of unique stations in the data.
+// BuildNewWaysFromPathTree takes a PathTree slice and the number of unique stations in the data.
 // Creates an instance of Ways and starts `offering' it each PathTree as many times as the number
 // of unique stations in the data, starting with the specified one. At the end, clears each `incomplete' path and
 // returns the Ways object.
-func buildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {
+func BuildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {
 	ways := Ways{}
 
 	for i := 0; i < maxStations; i++ {
@@ -69,8 +69,8 @@ func buildNewWaysFromPathTree(pathTrees []*PathTree, maxStations int) Ways {
 	return ways
 }
 
-// getAllPathTrees takes a completed tree and its associated treeMap, returns a PathTree slice.
-func getAllPathTrees(tree *PathTree, treeMap *map[int]*PathTree) []*PathTree {
+// GetAllPathTrees takes a completed tree and its associated treeMap, returns a PathTree slice.
+func GetAllPathTrees(tree *PathTree, treeMap *map[int]*PathTree) []*PathTree {
 	start := tree.DepartureId
 
 	result := []*PathTree{tree}
