@@ -2,7 +2,6 @@ package tests
 
 import (
 	"fmt"
-	"log"
 	"testing"
 	"time"
 
@@ -15,7 +14,7 @@ const dataPath = "test_task_data.csv"
 func TestBuildPathExecutionTime(t *testing.T) {
 	allTrains, err := utils.ParseCsvToTrainStruct(dataPath)
 	if err != nil {
-		log.Panicln(allTrains)
+		t.Errorf("error ocured when parsing csv file")
 		return
 	}
 	var (
