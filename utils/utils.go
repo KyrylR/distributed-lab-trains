@@ -27,7 +27,7 @@ func ParseCsvToTrainStruct(path string) ([]algoritms.Train, error) {
 		}
 	}(file)
 
-	var re = regexp.MustCompile(`[^\d\;\:]`)
+	var re = regexp.MustCompile(`[^\d\;\:\.]`)
 
 	var result []algoritms.Train
 	scanner := bufio.NewScanner(file)
