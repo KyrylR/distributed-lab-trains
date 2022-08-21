@@ -79,7 +79,7 @@ func (w *PossibleWay) proposeNewWay(pathNode *PathTree, ways *Ways, maxStations 
 		w.Way = append(w.Way, pathNode.DepartureId)
 		return w.addNewWay(pathNode, ways)
 	}
-	if w.getLastStation() == pathNode.DepartureId {
+	if w.GetLastStation() == pathNode.DepartureId {
 		return w.addNewWay(pathNode, ways)
 	}
 	return false
@@ -131,7 +131,21 @@ func (w *PossibleWay) isEqual(other []int) bool {
 	return reflect.DeepEqual(w.Way, other)
 }
 
-// getLastStation returns the ID of the last station in the Way
-func (w *PossibleWay) getLastStation() int {
+// GetLastStation returns the ID of the last station in the Way
+func (w *PossibleWay) GetLastStation() int {
 	return w.Way[len(w.Way)-1]
+}
+
+// GetNextStation returns the next station after the given one,
+// returns -1 if the given station is the last one on the path.
+func GetNextStation(currentStation int, way *PossibleWay) int {
+	if currentStation == way.GetLastStation() {
+		return -1
+	}
+	for idx, station := range way.Way {
+		if station == currentStation {
+			return way.Way[idx+1]
+		}
+	}
+	return -1
 }
