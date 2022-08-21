@@ -15,5 +15,5 @@ func main() {
 		log.Panicln(allTrains)
 		return
 	}
-	algoritms.BuildPaths(&allTrains)
+	algoritms.BuildPathsGo(&allTrains)
 }
