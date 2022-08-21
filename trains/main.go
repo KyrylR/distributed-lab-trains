@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"DistributedLab_Trains/algoritms"
@@ -15,5 +16,19 @@ func main() {
 		log.Panicln(allTrains)
 		return
 	}
-	algoritms.BuildPathsGo(&allTrains)
+	ways := algoritms.BuildPathsGo(&allTrains)
+	query := algoritms.Query{}
+	err = query.Initialize(ways)
+	if err != nil {
+		log.Panicln(allTrains)
+		return
+	}
+	result := query.QueryByTime(10)
+	for _, res := range result {
+		fmt.Println(res.String())
+	}
+	result = query.QueryByCost(10)
+	for _, res := range result {
+		fmt.Println(res.String())
+	}
 }
