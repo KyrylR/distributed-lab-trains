@@ -25,6 +25,9 @@ type SortTrains struct {
 // SortTimeAndCost calls sortByCost and sortByTime functions.
 // The goroutines were used to speed up the function.
 func (d *SortTrains) SortTimeAndCost() error {
+	if len(d.Path.Way) == 0 {
+		return errors.New("no data provided")
+	}
 	err := d.sortByTime()
 	if err != nil {
 		return err
@@ -38,9 +41,6 @@ func (d *SortTrains) SortTimeAndCost() error {
 
 // sortByCost - sorts Path.TrainMap by difference in cost for different trains.
 func (d *SortTrains) sortByCost() error {
-	if len(d.Path.Way) == 0 {
-		return errors.New("no data provided")
-	}
 	for _, trains := range d.Path.TrainMap {
 		less := func(i, j int) bool {
 			return trains[i].Cost < trains[j].Cost
@@ -60,9 +60,6 @@ func (d *SortTrains) sortByTime() error {
 	d.copyTrainMap()
 	d.WaitingTimeMap = make(map[int][]waitToTrain)
 
-	if len(d.Path.Way) == 0 {
-		return errors.New("no data provided")
-	}
 	for station, trains := range d.TravelTimeMap {
 		less := func(i, j int) bool {
 			first := SmoothOutTime(trains[i].ArrivalTime.Sub(trains[i].DepartureTime))
