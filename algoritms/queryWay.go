@@ -41,6 +41,9 @@ func (p *trainPath) getTravelTime() {
 }
 
 func getLowestTravelTimeFromPath(trainPaths []trainPath) trainPath {
+	if len(trainPaths) < 1 {
+		return trainPath{}
+	}
 	less := func(i, j int) bool {
 		return trainPaths[i].travelTime < trainPaths[j].travelTime
 	}
@@ -74,7 +77,10 @@ func (w *QueryWay) initLowestTime() {
 	trainPaths := make([]trainPath, 0)
 	for _, ttt := range links[startLinkKey] {
 		newTrainPath := w.newTrainPath(ttt)
-		w.completeTrainPath(links, &newTrainPath)
+		ok := w.completeTrainPath(links, &newTrainPath)
+		if !ok {
+			continue
+		}
 		newTrainPath.getTravelTime()
 		trainPaths = append(trainPaths, newTrainPath)
 	}
@@ -83,12 +89,11 @@ func (w *QueryWay) initLowestTime() {
 
 func (w *QueryWay) completeTrainPath(links map[string][]trainToTrain, trainPath *trainPath) bool {
 	for i := 2; i < len(trainPath.trains); i++ {
-		lastTrainInPath := trainPath.trains[len(trainPath.trains)-1]
-		nextStationFromLast := GetNextStation(lastTrainInPath.ArrivalStationId, w.processedData.Path)
-		nextLinkKey := getLinkKey(lastTrainInPath.ArrivalStationId, nextStationFromLast)
+		lastTrainInPath := trainPath.trains[i-1]
+		nextLinkKey := getLinkKey(lastTrainInPath.DepartureStationId, lastTrainInPath.ArrivalStationId)
 		nextLinkedTrain := findNextLinkedTrain(links, lastTrainInPath, nextLinkKey)
 		if nextLinkedTrain.TrainId != -1 {
-			trainPath.trains = append(trainPath.trains, nextLinkedTrain)
+			trainPath.trains[i] = nextLinkedTrain
 		} else {
 			return false
 		}
@@ -108,7 +113,8 @@ func findNextLinkedTrain(links map[string][]trainToTrain, train Train, nextLinkK
 func (w *QueryWay) newTrainPath(ttt trainToTrain) trainPath {
 	newTrainPath := trainPath{}
 	arr := make([]Train, len(w.processedData.Path.Way)-1)
-	arr = append(arr, ttt.start, ttt.next)
+	arr[0] = ttt.start
+	arr[1] = ttt.next
 	newTrainPath.trains = arr
 	return newTrainPath
 }
@@ -131,7 +137,7 @@ func (w *QueryWay) String() string {
 	path := fmt.Sprint(w.processedData.Path.Way)
 	cost, _ := w.getLowestCost()
 	travelTime, _ := w.getLowestTime()
-	return fmt.Sprintf("Path: %v -- Cost: %v\t, Travel time: %v", path, cost, travelTime)
+	return fmt.Sprintf("Path: %v -- Cost: %.2f\t, Travel time: %v", path, cost, travelTime)
 }
 
 func newTrainToTrainStruct(start, next Train, waitingTime time.Duration) trainToTrain {
