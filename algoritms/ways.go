@@ -117,13 +117,31 @@ func (w *PossibleWay) addRoutes(pathNode *PathTree, toStation int) {
 	}
 }
 
-// copy make a copy of Way
+// copy - makes a copy of Way array
 func (w *PossibleWay) copy() []int {
 	copiedWay := make([]int, len(w.Way))
 	for idx, item := range w.Way {
 		copiedWay[idx] = item
 	}
 	return copiedWay
+}
+
+// fullCopy - makes full a copy of PossibleWay structure
+func (w *PossibleWay) fullCopy() PossibleWay {
+	var copiedPossibleWay PossibleWay
+	copiedWay := make([]int, len(w.Way))
+	copiedTrainMap := make(map[int][]Train)
+	for idx, item := range w.Way {
+		copiedWay[idx] = item
+	}
+
+	for key, value := range w.TrainMap {
+		copiedTrainMap[key] = DeepTrainSliceCopy(value)
+	}
+
+	copiedPossibleWay.Way = copiedWay
+	copiedPossibleWay.TrainMap = copiedTrainMap
+	return copiedPossibleWay
 }
 
 // isEqual returns true if the station path is the same, otherwise returns false
