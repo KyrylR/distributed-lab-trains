@@ -17,17 +17,24 @@ func main() {
 		return
 	}
 	ways := algoritms.BuildPathsGo(&allTrains)
+	for _, paths := range ways {
+		for _, path := range paths.Ways {
+			path.DeleteRouteDuplicates()
+		}
+	}
 	query := algoritms.Query{}
 	err = query.Initialize(ways)
 	if err != nil {
 		log.Panicln(allTrains)
 		return
 	}
-	result := query.QueryByTime(10)
-	for _, res := range result {
-		fmt.Println(res.String())
-	}
-	result = query.QueryByCost(10)
+	// fmt.Println("-------------------------Time-------------------------------------")
+	// result := query.QueryByTime(2)
+	// for _, res := range result {
+	// 	fmt.Println(res.String())
+	// }
+	fmt.Println("-------------------------Cost-------------------------------------")
+	result := query.QueryByCost(2)
 	for _, res := range result {
 		fmt.Println(res.String())
 	}
