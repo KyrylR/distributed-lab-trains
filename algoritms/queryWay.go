@@ -51,24 +51,28 @@ func getLowestTravelTimeFromPath(trainPaths []trainPath) trainPath {
 	return trainPaths[0]
 }
 
-func (w *QueryWay) getLowestCost() (float64, error) {
+func (w *QueryWay) getLowestCost() (float64, []int, error) {
 	if w.processedData == nil {
-		return 0, errors.New("uninitialised data has been provided")
+		return 0, nil, errors.New("uninitialised data has been provided")
 	}
 	cost := 0.0
+	trainPath := make([]int, len(w.processedData.Path.Way)-1)
 	for _, trains := range w.processedData.Path.TrainMap {
 		if len(trains) > 0 {
 			cost += trains[0].Cost
+			if w.processedData.Path.GetLastStation() != trains[0].DepartureStationId {
+				trainPath[w.processedData.Path.GetStationIndex(trains[0].DepartureStationId)] = trains[0].TrainId
+			}
 		}
 	}
-	return cost, nil
+	return cost, trainPath, nil
 }
 
-func (w *QueryWay) getLowestTime() (time.Duration, error) {
+func (w *QueryWay) getLowestTime() (trainPath, error) {
 	if w.processedData == nil {
-		return 0, errors.New("uninitialised data has been provided")
+		return trainPath{}, errors.New("uninitialised data has been provided")
 	}
-	return w.trainPathForTime.travelTime, nil
+	return w.trainPathForTime, nil
 }
 
 func (w *QueryWay) initLowestTime() {
@@ -79,7 +83,7 @@ func (w *QueryWay) initLowestTime() {
 		newTrainPath := w.newTrainPath(ttt)
 		ok := w.completeTrainPath(links, &newTrainPath)
 		if !ok {
-			continue
+			newTrainPath.trains = w.buildWayFromFastestTrains()
 		}
 		newTrainPath.getTravelTime()
 		trainPaths = append(trainPaths, newTrainPath)
@@ -99,6 +103,18 @@ func (w *QueryWay) completeTrainPath(links map[string][]trainToTrain, trainPath 
 		}
 	}
 	return true
+}
+
+func (w *QueryWay) buildWayFromFastestTrains() []Train {
+	result := make([]Train, len(w.processedData.Path.Way)-1)
+	i := 0
+	for _, station := range w.processedData.Path.Way {
+		if len(w.processedData.TravelTimeMap[station]) > 0 && w.processedData.Path.GetLastStation() != station {
+			result[i] = w.processedData.TravelTimeMap[station][0]
+			i += 1
+		}
+	}
+	return result
 }
 
 func findNextLinkedTrain(links map[string][]trainToTrain, train Train, nextLinkKey string) Train {
@@ -135,9 +151,19 @@ func (w *QueryWay) buildStationLinks() map[string][]trainToTrain {
 
 func (w *QueryWay) String() string {
 	path := fmt.Sprint(w.processedData.Path.Way)
-	cost, _ := w.getLowestCost()
-	travelTime, _ := w.getLowestTime()
-	return fmt.Sprintf("Path: %v -- Cost: %.2f\t, Travel time: %v", path, cost, travelTime)
+	cost, costTrainPath, _ := w.getLowestCost()
+	timeTravelPath, _ := w.getLowestTime()
+	timeTrainIds := make([]int, len(timeTravelPath.trains))
+	i := 0
+	for _, train := range timeTravelPath.trains {
+		timeTrainIds[i] = train.TrainId
+		i += 1
+	}
+	timeTrainIdsStr := fmt.Sprint(timeTrainIds)
+	stationPath := fmt.Sprintf("Station path: %v", path)
+	costPath := fmt.Sprintf("Cost: %.2f -- TrainIds: %v", cost, fmt.Sprint(costTrainPath))
+	timePath := fmt.Sprintf("Time: %v -- TrainIds: %v", timeTravelPath.travelTime, timeTrainIdsStr)
+	return fmt.Sprintf("%v\n%v\n%v\n", stationPath, costPath, timePath)
 }
 
 func newTrainToTrainStruct(start, next Train, waitingTime time.Duration) trainToTrain {
