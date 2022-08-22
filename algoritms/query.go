@@ -2,10 +2,13 @@ package algoritms
 
 import "sort"
 
+// Query - stores a slice of the QueryWay structure.
 type Query struct {
 	allWays []QueryWay
 }
 
+// Initialize - takes a slice of Ways and executes all necessary functions
+// to prepare the data for the desired queries.
 func (q *Query) Initialize(ways []Ways) error {
 	q.allWays = make([]QueryWay, 0)
 	for _, possibleWays := range ways {
@@ -20,11 +23,12 @@ func (q *Query) Initialize(ways []Ways) error {
 		}
 	}
 	for i := 0; i < len(q.allWays); i++ {
-		q.allWays[i].initLowestTime()
+		q.allWays[i].initTrainPathForTime()
 	}
 	return nil
 }
 
+// sortByTime - uses the built-in sort function to order the slices by lowest time.
 func (q *Query) sortByTime() {
 	less := func(i, j int) bool {
 		first, _ := q.allWays[i].getLowestTime()
@@ -34,6 +38,7 @@ func (q *Query) sortByTime() {
 	sort.Slice(q.allWays, less)
 }
 
+// sortByCost - uses the built-in sort function to order the slices by lowest cost.
 func (q *Query) sortByCost() {
 	less := func(i, j int) bool {
 		first, _, _ := q.allWays[i].getLowestCost()
@@ -43,16 +48,19 @@ func (q *Query) sortByCost() {
 	sort.Slice(q.allWays, less)
 }
 
+// QueryByTime sorts paths by time and calls returnWays to return them.
 func (q *Query) QueryByTime(recordsNum int) []QueryWay {
 	q.sortByTime()
 	return q.returnWays(recordsNum)
 }
 
+// QueryByCost sorts paths by cost and calls returnWays to return them.
 func (q *Query) QueryByCost(recordsNum int) []QueryWay {
 	q.sortByCost()
 	return q.returnWays(recordsNum)
 }
 
+// returnWays - returns a given number of processed trains.
 func (q *Query) returnWays(recordsNum int) []QueryWay {
 	if recordsNum > len(q.allWays) {
 		recordsNum = len(q.allWays)
