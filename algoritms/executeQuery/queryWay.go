@@ -9,23 +9,23 @@ import (
 
 // QueryWay is used to make the last preparations before running queries.
 type QueryWay struct {
-	processedData    *SortTrains
-	trainPathForTime TrainPath
+	ProcessedData    *SortTrains
+	TrainPathForTime TrainPath
 }
 
 // GetLowestCost returns path and cost, with the lowest price to pass all stations.
 // returns an error if uninitialised data was provided.
 func (w *QueryWay) GetLowestCost() (float64, []int, error) {
-	if w.processedData == nil {
+	if w.ProcessedData == nil {
 		return 0, nil, errors.New("uninitialised data has been provided")
 	}
 	cost := 0.0
-	trainPath := make([]int, len(w.processedData.Path.Way)-1)
-	for _, trains := range w.processedData.Path.TrainMap {
+	trainPath := make([]int, len(w.ProcessedData.Path.Way)-1)
+	for _, trains := range w.ProcessedData.Path.TrainMap {
 		if len(trains) > 0 {
 			cost += trains[0].Cost
-			if w.processedData.Path.GetLastStation() != trains[0].DepartureStationId {
-				trainPath[w.processedData.Path.GetStationIndex(trains[0].DepartureStationId)] = trains[0].TrainId
+			if w.ProcessedData.Path.GetLastStation() != trains[0].DepartureStationId {
+				trainPath[w.ProcessedData.Path.GetStationIndex(trains[0].DepartureStationId)] = trains[0].TrainId
 			}
 		}
 	}
@@ -35,21 +35,21 @@ func (w *QueryWay) GetLowestCost() (float64, []int, error) {
 // GetLowestTime returns the path that takes the shortest time to traverse all stations.
 // returns an error if uninitialized data was provided.
 func (w *QueryWay) GetLowestTime() (TrainPath, error) {
-	if w.processedData == nil {
+	if w.ProcessedData == nil {
 		return TrainPath{}, errors.New("uninitialised data has been provided")
 	}
-	return w.trainPathForTime, nil
+	return w.TrainPathForTime, nil
 }
 
 // initTrainPathForTime - finds the lowest path time for Path from the given processed data in the structure.
 // Use the buildStationLinks function and link features to speed up the process.
-// Finally, initialised the trainPathForTime field in the QueryWay structure.
+// Finally, initialised the TrainPathForTime field in the QueryWay structure.
 func (w *QueryWay) initTrainPathForTime() {
 	links := w.buildStationLinks()
-	startLinkKey := getLinkKey(w.processedData.Path.Way[0], w.processedData.Path.Way[1])
+	startLinkKey := getLinkKey(w.ProcessedData.Path.Way[0], w.ProcessedData.Path.Way[1])
 	trainPaths := make([]TrainPath, 0)
 	for _, ttt := range links[startLinkKey] {
-		newTrainPath := NewTrainPath(ttt, w.processedData.Path.Way)
+		newTrainPath := NewTrainPath(ttt, w.ProcessedData.Path.Way)
 		ok := w.completeTrainPath(links, &newTrainPath)
 		if !ok {
 			newTrainPath.trains = w.buildWayFromFastestTrains()
@@ -57,7 +57,7 @@ func (w *QueryWay) initTrainPathForTime() {
 		newTrainPath.initTravelTimeField()
 		trainPaths = append(trainPaths, newTrainPath)
 	}
-	w.trainPathForTime = GetLowestTravelTimeForPath(trainPaths)
+	w.TrainPathForTime = GetLowestTravelTimeForPath(trainPaths)
 }
 
 // completeTrainPath uses the reference structure to create a complete TrainPath,
@@ -79,11 +79,11 @@ func (w *QueryWay) completeTrainPath(links map[string][]TrainToTrain, trainPath 
 // buildWayFromFastestTrains simply takes the fastest trains from station to station
 // and creates a slice of such trains.
 func (w *QueryWay) buildWayFromFastestTrains() []algoritms.Train {
-	result := make([]algoritms.Train, len(w.processedData.Path.Way)-1)
+	result := make([]algoritms.Train, len(w.ProcessedData.Path.Way)-1)
 	i := 0
-	for _, station := range w.processedData.Path.Way {
-		if len(w.processedData.TravelTimeMap[station]) > 0 && w.processedData.Path.GetLastStation() != station {
-			result[i] = w.processedData.TravelTimeMap[station][0]
+	for _, station := range w.ProcessedData.Path.Way {
+		if len(w.ProcessedData.TravelTimeMap[station]) > 0 && w.ProcessedData.Path.GetLastStation() != station {
+			result[i] = w.ProcessedData.TravelTimeMap[station][0]
 			i += 1
 		}
 	}
@@ -106,9 +106,9 @@ func findNextLinkedTrain(links map[string][]TrainToTrain, train algoritms.Train,
 // departure station and second value is arrival station.
 func (w *QueryWay) buildStationLinks() map[string][]TrainToTrain {
 	links := make(map[string][]TrainToTrain)
-	for _, trains := range w.processedData.TravelTimeMap {
+	for _, trains := range w.ProcessedData.TravelTimeMap {
 		for _, train := range trains {
-			for _, waitForTrain := range w.processedData.WaitingTimeMap[train.TrainId] {
+			for _, waitForTrain := range w.ProcessedData.WaitingTimeMap[train.TrainId] {
 				key := getLinkKey(train.DepartureStationId, waitForTrain.train.DepartureStationId)
 				newTTT := NewTrainToTrain(train, waitForTrain.train, waitForTrain.waitingTime)
 				links[key] = append(links[key], newTTT)
@@ -126,7 +126,7 @@ func getLinkKey(startId, nextId int) string {
 
 // String implements Stringer interface. Used to display query information about Path nicely.
 func (w *QueryWay) String() string {
-	path := fmt.Sprint(w.processedData.Path.Way)
+	path := fmt.Sprint(w.ProcessedData.Path.Way)
 	cost, costTrainPath, _ := w.GetLowestCost()
 	timeTravelPath, _ := w.GetLowestTime()
 	timeTrainIds := make([]int, len(timeTravelPath.trains))
