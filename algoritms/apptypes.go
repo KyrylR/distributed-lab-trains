@@ -20,3 +20,22 @@ func DeepTrainSliceCopy(arr []Train) []Train {
 	}
 	return newArr
 }
+
+// RemoveDuplicates takes a Train slice and produces an output containing
+// all unique stations that are compared by TrainId.
+func RemoveDuplicates(arr []Train) []Train {
+	unique := map[int]Train{}
+	for _, train := range arr {
+		unique[train.TrainId] = train
+	}
+
+	result := make([]Train, len(unique))
+	i := 0
+
+	for _, v := range unique {
+		result[i] = v
+		i++
+	}
+
+	return result
+}
