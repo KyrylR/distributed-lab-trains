@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"DistributedLab_Trains/algoritms"
+	"DistributedLab_Trains/algoritms/executeQuery"
+	"DistributedLab_Trains/algoritms/findPath"
 	"DistributedLab_Trains/utils"
 )
 
@@ -16,25 +17,25 @@ func main() {
 		log.Panicln(allTrains)
 		return
 	}
-	ways := algoritms.BuildPathsGo(&allTrains)
+	ways := findPath.BuildPathsGo(&allTrains)
 	for _, paths := range ways {
 		for _, path := range paths.Ways {
 			path.DeleteRouteDuplicates()
 		}
 	}
-	query := algoritms.Query{}
+	query := executeQuery.Query{}
 	err = query.Initialize(ways)
 	if err != nil {
 		log.Panicln(allTrains)
 		return
 	}
-	// fmt.Println("-------------------------Time-------------------------------------")
-	// result := query.QueryByTime(2)
-	// for _, res := range result {
-	// 	fmt.Println(res.String())
-	// }
+	fmt.Println("-------------------------Time-------------------------------------")
+	result := query.QueryByTime(5)
+	for _, res := range result {
+		fmt.Println(res.String())
+	}
 	fmt.Println("-------------------------Cost-------------------------------------")
-	result := query.QueryByCost(2)
+	result = query.QueryByCost(5)
 	for _, res := range result {
 		fmt.Println(res.String())
 	}
