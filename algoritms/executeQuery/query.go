@@ -22,7 +22,7 @@ func (q *Query) Initialize(ways []findPath.Ways) error {
 			if err != nil {
 				return err
 			}
-			newQueryWay := QueryWay{processedData: &newProcessedData}
+			newQueryWay := QueryWay{ProcessedData: &newProcessedData}
 			q.allWays = append(q.allWays, newQueryWay)
 		}
 	}
