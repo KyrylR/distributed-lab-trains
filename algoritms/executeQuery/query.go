@@ -22,7 +22,7 @@ func (q *Query) Initialize(ways []findPath.Ways) error {
 			if err != nil {
 				return err
 			}
-			newQueryWay := QueryWay{ProcessedData: &newProcessedData}
+			newQueryWay := QueryWay{processedData: &newProcessedData}
 			q.allWays = append(q.allWays, newQueryWay)
 		}
 	}
@@ -35,8 +35,8 @@ func (q *Query) Initialize(ways []findPath.Ways) error {
 // sortByTime - uses the built-in sort function to order the slices by lowest time.
 func (q *Query) sortByTime() {
 	less := func(i, j int) bool {
-		first, _ := q.allWays[i].getLowestTime()
-		second, _ := q.allWays[j].getLowestTime()
+		first, _ := q.allWays[i].GetLowestTime()
+		second, _ := q.allWays[j].GetLowestTime()
 		return first.TravelTime < second.TravelTime
 	}
 	sort.Slice(q.allWays, less)
@@ -45,8 +45,8 @@ func (q *Query) sortByTime() {
 // sortByCost - uses the built-in sort function to order the slices by lowest cost.
 func (q *Query) sortByCost() {
 	less := func(i, j int) bool {
-		first, _, _ := q.allWays[i].getLowestCost()
-		second, _, _ := q.allWays[j].getLowestCost()
+		first, _, _ := q.allWays[i].GetLowestCost()
+		second, _, _ := q.allWays[j].GetLowestCost()
 		return first < second
 	}
 	sort.Slice(q.allWays, less)
