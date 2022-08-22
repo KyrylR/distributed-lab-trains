@@ -1,14 +1,16 @@
-package algoritms
+package findPath
 
 import (
 	"reflect"
+
+	"DistributedLab_Trains/algoritms"
 )
 
 // PossibleWay represents the path from station to station and the associated
 // trains that can be used to get to the desired stations.
 type PossibleWay struct {
 	Way      []int
-	TrainMap map[int][]Train // key - station identifier, value - array of similar trains.
+	TrainMap map[int][]algoritms.Train // key - station identifier, value - array of similar trains.
 }
 
 // Ways represents an array of PossibleWay references.
@@ -111,7 +113,7 @@ func (w *PossibleWay) addRoutes(pathNode *PathTree, toStation int) {
 	for _, route := range pathNode.Routes {
 		if route.ArrivalStationId == toStation && pathNode.DepartureId == route.DepartureStationId {
 			if w.TrainMap == nil {
-				w.TrainMap = make(map[int][]Train)
+				w.TrainMap = make(map[int][]algoritms.Train)
 			}
 			w.TrainMap[route.DepartureStationId] = append(w.TrainMap[route.DepartureStationId], route)
 		}
@@ -121,7 +123,7 @@ func (w *PossibleWay) addRoutes(pathNode *PathTree, toStation int) {
 // DeleteRouteDuplicates uses RemoveDuplicates function to clear TrainMap of duplicates.
 func (w *PossibleWay) DeleteRouteDuplicates() {
 	for _, station := range w.Way {
-		w.TrainMap[station] = RemoveDuplicates(w.TrainMap[station])
+		w.TrainMap[station] = algoritms.RemoveDuplicates(w.TrainMap[station])
 	}
 }
 
@@ -138,13 +140,13 @@ func (w *PossibleWay) copy() []int {
 func (w *PossibleWay) fullCopy() PossibleWay {
 	var copiedPossibleWay PossibleWay
 	copiedWay := make([]int, len(w.Way))
-	copiedTrainMap := make(map[int][]Train)
+	copiedTrainMap := make(map[int][]algoritms.Train)
 	for idx, item := range w.Way {
 		copiedWay[idx] = item
 	}
 
 	for key, value := range w.TrainMap {
-		copiedTrainMap[key] = DeepTrainSliceCopy(value)
+		copiedTrainMap[key] = algoritms.DeepTrainSliceCopy(value)
 	}
 
 	copiedPossibleWay.Way = copiedWay

@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"DistributedLab_Trains/algoritms"
+	"DistributedLab_Trains/algoritms/findPath"
 	"DistributedLab_Trains/utils"
 )
 
@@ -13,7 +13,7 @@ func TestMyApproach(t *testing.T) {
 		t.Errorf("error ocured when parsing csv file")
 		return
 	}
-	paths := algoritms.BuildPaths(&allTrains)
+	paths := findPath.BuildPaths(&allTrains)
 	sum := 0
 	for _, path := range paths {
 		sum += len(path.Ways)

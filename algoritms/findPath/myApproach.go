@@ -1,14 +1,16 @@
-package algoritms
+package findPath
 
 import (
 	"sync"
+
+	"DistributedLab_Trains/algoritms"
 )
 
 // BuildPaths accepts the given data as an array of Train.
 // Builds the corresponding PathTree structure and uses it to find all paths from station to station
 // that can be reached with the corresponding trains.
 // Returns a slice of Ways, containing all `possible paths'.
-func BuildPaths(data *[]Train) []Ways {
+func BuildPaths(data *[]algoritms.Train) []Ways {
 	uniqueStations := GetUniqueStations(data, false)
 	mappedData := BuildMappedData(data)
 	result := make([]Ways, 0)
@@ -23,7 +25,7 @@ func BuildPaths(data *[]Train) []Ways {
 }
 
 // BuildPathsGo is the same function as BuildPaths, but uses goroutines to speed up the search for all paths.
-func BuildPathsGo(data *[]Train) []Ways {
+func BuildPathsGo(data *[]algoritms.Train) []Ways {
 	uniqueStations := GetUniqueStations(data, false)
 	mappedData := BuildMappedData(data)
 	result := make([]Ways, 0)

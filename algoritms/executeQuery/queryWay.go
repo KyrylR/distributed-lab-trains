@@ -1,8 +1,10 @@
-package algoritms
+package executeQuery
 
 import (
 	"errors"
 	"fmt"
+
+	"DistributedLab_Trains/algoritms"
 )
 
 // QueryWay is used to make the last preparations before running queries.
@@ -76,8 +78,8 @@ func (w *QueryWay) completeTrainPath(links map[string][]TrainToTrain, trainPath 
 
 // buildWayFromFastestTrains simply takes the fastest trains from station to station
 // and creates a slice of such trains.
-func (w *QueryWay) buildWayFromFastestTrains() []Train {
-	result := make([]Train, len(w.processedData.Path.Way)-1)
+func (w *QueryWay) buildWayFromFastestTrains() []algoritms.Train {
+	result := make([]algoritms.Train, len(w.processedData.Path.Way)-1)
 	i := 0
 	for _, station := range w.processedData.Path.Way {
 		if len(w.processedData.TravelTimeMap[station]) > 0 && w.processedData.Path.GetLastStation() != station {
@@ -90,13 +92,13 @@ func (w *QueryWay) buildWayFromFastestTrains() []Train {
 
 // findNextLinkedTrain returns the next linked train in the link structure for the given key,
 // otherwise it returns an empty train.
-func findNextLinkedTrain(links map[string][]TrainToTrain, train Train, nextLinkKey string) Train {
+func findNextLinkedTrain(links map[string][]TrainToTrain, train algoritms.Train, nextLinkKey string) algoritms.Train {
 	for _, value := range links[nextLinkKey] {
 		if value.start.TrainId == train.TrainId {
 			return value.next
 		}
 	}
-	return Train{TrainId: -1}
+	return algoritms.Train{TrainId: -1}
 }
 
 // buildStationLinks creates links between stations using the TrainToTrain structure.

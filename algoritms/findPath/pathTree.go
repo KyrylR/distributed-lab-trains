@@ -1,16 +1,20 @@
-package algoritms
+package findPath
+
+import (
+	"DistributedLab_Trains/algoritms"
+)
 
 // PathTree represents a unique station in the data
 type PathTree struct {
 	DepartureId int
-	Routes      []Train     // Routes contain information about each Train departing from this station
-	Next        []*PathTree // Next - slice of stations that can be reached from the current one.
+	Routes      []algoritms.Train // Routes contain information about each Train departing from this station
+	Next        []*PathTree       // Next - slice of stations that can be reached from the current one.
 }
 
 // BuildPathTree fills each field in the PathTree structure with received information about unique stations,
 // and all stations in map format, where key is the source station ID and value is a slice of
 // the corresponding `Train` structures.
-func (tree *PathTree) BuildPathTree(uniqueStations []int, mappedData map[int][]Train) map[int]*PathTree {
+func (tree *PathTree) BuildPathTree(uniqueStations []int, mappedData map[int][]algoritms.Train) map[int]*PathTree {
 	tree.Routes = mappedData[tree.DepartureId]
 
 	treeMap := make(map[int]*PathTree)
@@ -37,13 +41,13 @@ func (tree *PathTree) fillPathTreeNext(treeMap *map[int]*PathTree) {
 }
 
 // newPathTree returns a new PathTree structure element with the given departure ID and associated trains.
-func newPathTree(departure int, trains []Train) *PathTree {
+func newPathTree(departure int, trains []algoritms.Train) *PathTree {
 	newPathTree := PathTree{DepartureId: departure}
 	newPathTree.Routes = trains
 	return &newPathTree
 }
 
 // getArrivalStations returns a slice of station IDs to which provided trains can reach.
-func getArrivalStations(routes *[]Train) []int {
+func getArrivalStations(routes *[]algoritms.Train) []int {
 	return GetUniqueStations(routes, true)
 }

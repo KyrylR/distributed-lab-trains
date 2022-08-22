@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"DistributedLab_Trains/algoritms"
+	"DistributedLab_Trains/algoritms/findPath"
 	"DistributedLab_Trains/utils"
 )
 
@@ -20,11 +20,11 @@ func TestBuildPathExecutionTime(t *testing.T) {
 		withoutGoTime time.Duration
 	)
 	start := time.Now()
-	algoritms.BuildPaths(&allTrains)
+	findPath.BuildPaths(&allTrains)
 	withoutGoTime = utils.TimeTrack(start, "BuildPaths")
 
 	start = time.Now()
-	algoritms.BuildPathsGo(&allTrains)
+	findPath.BuildPathsGo(&allTrains)
 	withGoTime = utils.TimeTrack(start, "BuildPathsGo")
 
 	fmt.Println(getFasterResult(withoutGoTime, withGoTime))

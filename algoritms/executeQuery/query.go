@@ -1,6 +1,10 @@
-package algoritms
+package executeQuery
 
-import "sort"
+import (
+	"sort"
+
+	"DistributedLab_Trains/algoritms/findPath"
+)
 
 // Query - stores a slice of the QueryWay structure.
 type Query struct {
@@ -9,7 +13,7 @@ type Query struct {
 
 // Initialize - takes a slice of Ways and executes all necessary functions
 // to prepare the data for the desired queries.
-func (q *Query) Initialize(ways []Ways) error {
+func (q *Query) Initialize(ways []findPath.Ways) error {
 	q.allWays = make([]QueryWay, 0)
 	for _, possibleWays := range ways {
 		for _, way := range possibleWays.Ways {

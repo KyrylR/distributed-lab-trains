@@ -1,24 +1,27 @@
-package algoritms
+package executeQuery
 
 import (
 	"errors"
 	"sort"
 	"time"
+
+	"DistributedLab_Trains/algoritms"
+	"DistributedLab_Trains/algoritms/findPath"
 )
 
 // waitToTrain is used to combine the train and waitingTime fields.
 type waitToTrain struct {
 	// The next train
-	train Train
+	train algoritms.Train
 	// the waitingTime field answers the question of how long to wait for the next train
 	waitingTime time.Duration
 }
 
 // SortTrains stores the data used for queries
 type SortTrains struct {
-	Path *PossibleWay
+	Path *findPath.PossibleWay
 	// key - departure station ID, value array of trains that departure from this station
-	TravelTimeMap  map[int][]Train
+	TravelTimeMap  map[int][]algoritms.Train
 	WaitingTimeMap map[int][]waitToTrain // key - TrainId, value - waitToTrain struct
 }
 
@@ -70,7 +73,7 @@ func (d *SortTrains) sortByTime() error {
 		if !sort.SliceIsSorted(trains, less) {
 			return errors.New("error occurred, while sorting by time")
 		}
-		nextStation := GetNextStation(station, d.Path)
+		nextStation := findPath.GetNextStation(station, d.Path)
 		if nextStation != -1 {
 			trainsFromNextStation := d.TravelTimeMap[nextStation]
 			for _, train := range trains {
@@ -88,7 +91,7 @@ func (d *SortTrains) sortByTime() error {
 // fillWaitingTimeMap takes Train instance and Trains slice, where train.ArrivalId is equal to trains[...].DepartureId;
 // creates slice of waitToTrain structures and sorts it by waitingTime field.
 // Finally, it initializes WaitingTimeMap field of SortTrains structure.
-func (d *SortTrains) fillWaitingTimeMap(train Train, trains []Train) error {
+func (d *SortTrains) fillWaitingTimeMap(train algoritms.Train, trains []algoritms.Train) error {
 	result := make([]waitToTrain, len(trains))
 	for i := 0; i < len(result); i++ {
 		result[i] = newWaitToTrain(train, trains[i])
@@ -106,14 +109,14 @@ func (d *SortTrains) fillWaitingTimeMap(train Train, trains []Train) error {
 
 // copyTrainMap - creates a copy of TrainMap, and initializes the TravelTimeMap field.
 func (d *SortTrains) copyTrainMap() {
-	d.TravelTimeMap = make(map[int][]Train)
+	d.TravelTimeMap = make(map[int][]algoritms.Train)
 	for key, value := range d.Path.TrainMap {
-		d.TravelTimeMap[key] = DeepTrainSliceCopy(value)
+		d.TravelTimeMap[key] = algoritms.DeepTrainSliceCopy(value)
 	}
 }
 
 // newWaitToTrain returns a new instance of the waitToTrain structure that has been populated with the given data.
-func newWaitToTrain(arrived Train, waitFor Train) waitToTrain {
+func newWaitToTrain(arrived algoritms.Train, waitFor algoritms.Train) waitToTrain {
 	newWaitToTrain := waitToTrain{train: waitFor}
 	newWaitToTrain.waitingTime = SmoothOutTime(waitFor.DepartureTime.Sub(arrived.ArrivalTime))
 	return newWaitToTrain

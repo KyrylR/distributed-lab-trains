@@ -1,20 +1,22 @@
-package algoritms
+package executeQuery
 
 import (
 	"sort"
 	"time"
+
+	"DistributedLab_Trains/algoritms"
 )
 
 // TrainPath represents the route of the trains and the timing of the route for all trains.
 type TrainPath struct {
-	trains     []Train
+	trains     []algoritms.Train
 	travelTime time.Duration
 }
 
 // TrainToTrain combines trains and stores their travel time.
 type TrainToTrain struct {
-	start Train
-	next  Train
+	start algoritms.Train
+	next  algoritms.Train
 	// travel time of the first one + wait time of the second one + travel time of the second one
 	travelTime time.Duration
 }
@@ -23,7 +25,7 @@ type TrainToTrain struct {
 // The first records in the instance are the two fastest trains.
 func NewTrainPath(ttt TrainToTrain, way []int) TrainPath {
 	newTrainPath := TrainPath{}
-	arr := make([]Train, len(way)-1)
+	arr := make([]algoritms.Train, len(way)-1)
 	arr[0] = ttt.start
 	arr[1] = ttt.next
 	newTrainPath.trains = arr
@@ -31,7 +33,7 @@ func NewTrainPath(ttt TrainToTrain, way []int) TrainPath {
 }
 
 // NewTrainToTrain returns a new instance of TrainToTrain structure with populated fields from received data.
-func NewTrainToTrain(start, next Train, waitingTime time.Duration) TrainToTrain {
+func NewTrainToTrain(start, next algoritms.Train, waitingTime time.Duration) TrainToTrain {
 	startTravelTime := SmoothOutTime(start.ArrivalTime.Sub(start.DepartureTime))
 	nextTravelTime := SmoothOutTime(next.ArrivalTime.Sub(next.DepartureTime))
 	res := TrainToTrain{
