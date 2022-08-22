@@ -28,10 +28,11 @@ func (ways *Ways) proposeWay(pathNode *PathTree, maxStations int) bool {
 		return true
 	}
 	for _, way := range ways.Ways {
-		tempWey := way.fullCopy()
+		alternativeWey := way.fullCopy()
 		addedWay = way.proposeNewWay(pathNode, ways, maxStations)
 		for addedWay {
 			justAdded = true
+			tempWey := alternativeWey.fullCopy()
 			addedWay = ways.addWay(tempWey, pathNode, maxStations)
 		}
 	}
@@ -159,6 +160,16 @@ func (w *PossibleWay) isEqual(other []int) bool {
 // GetLastStation returns the ID of the last station in the Way
 func (w *PossibleWay) GetLastStation() int {
 	return w.Way[len(w.Way)-1]
+}
+
+// GetStationIndex returns index for given station on Way.
+func (w *PossibleWay) GetStationIndex(station int) int {
+	for idx, way := range w.Way {
+		if way == station {
+			return idx
+		}
+	}
+	return -1
 }
 
 // GetNextStation returns the next station after the given one,
