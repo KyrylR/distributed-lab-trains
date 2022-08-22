@@ -10,7 +10,7 @@ import (
 func TestPathTree(t *testing.T) {
 	allTrains, err := utils.ParseCsvToTrainStruct("data/data_for_tests.csv")
 	if err != nil {
-		t.Errorf("error ocured when parsing csv file")
+		t.Errorf("error occurred when parsing csv file")
 		return
 	}
 	uniqueStations := findPath.GetUniqueStations(&allTrains, false)
