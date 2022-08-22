@@ -37,7 +37,7 @@ func (q *Query) sortByTime() {
 	less := func(i, j int) bool {
 		first, _ := q.allWays[i].getLowestTime()
 		second, _ := q.allWays[j].getLowestTime()
-		return first.travelTime < second.travelTime
+		return first.TravelTime < second.TravelTime
 	}
 	sort.Slice(q.allWays, less)
 }

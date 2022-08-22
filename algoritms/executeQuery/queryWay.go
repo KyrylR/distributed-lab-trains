@@ -138,6 +138,6 @@ func (w *QueryWay) String() string {
 	timeTrainIdsStr := fmt.Sprint(timeTrainIds)
 	stationPath := fmt.Sprintf("Station path: %v", path)
 	costPath := fmt.Sprintf("Cost: %.2f -- TrainIds: %v", cost, fmt.Sprint(costTrainPath))
-	timePath := fmt.Sprintf("Time: %v -- TrainIds: %v", timeTravelPath.travelTime, timeTrainIdsStr)
+	timePath := fmt.Sprintf("Time: %v -- TrainIds: %v", timeTravelPath.TravelTime, timeTrainIdsStr)
 	return fmt.Sprintf("%v\n%v\n%v\n", stationPath, costPath, timePath)
 }

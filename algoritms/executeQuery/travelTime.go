@@ -10,7 +10,7 @@ import (
 // TrainPath represents the route of the trains and the timing of the route for all trains.
 type TrainPath struct {
 	trains     []algoritms.Train
-	travelTime time.Duration
+	TravelTime time.Duration
 }
 
 // TrainToTrain combines trains and stores their travel time.
@@ -45,7 +45,7 @@ func NewTrainToTrain(start, next algoritms.Train, waitingTime time.Duration) Tra
 }
 
 // initTravelTimeField goes through train by train and calculates travel time.
-// At the end it initializes travelTime field in TrainPath structure.
+// At the end it initializes TravelTime field in TrainPath structure.
 func (p *TrainPath) initTravelTimeField() {
 	var (
 		travelTime      time.Duration
@@ -60,17 +60,17 @@ func (p *TrainPath) initTravelTimeField() {
 		currentTrainTime := SmoothOutTime(train.ArrivalTime.Sub(train.DepartureTime))
 		travelTime += currentTrainTime
 	}
-	p.travelTime = travelTime
+	p.TravelTime = travelTime
 }
 
 // GetLowestTravelTimeForPath takes a slice of the TrainPath structure, sorts it and
-// returns the first TrainPath instance where travelTime is the lowest.
+// returns the first TrainPath instance where TravelTime is the lowest.
 func GetLowestTravelTimeForPath(trainPaths []TrainPath) TrainPath {
 	if len(trainPaths) < 1 {
 		return TrainPath{}
 	}
 	less := func(i, j int) bool {
-		return trainPaths[i].travelTime < trainPaths[j].travelTime
+		return trainPaths[i].TravelTime < trainPaths[j].TravelTime
 	}
 	sort.Slice(trainPaths, less)
 	return trainPaths[0]
