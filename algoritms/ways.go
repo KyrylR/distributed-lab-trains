@@ -28,7 +28,7 @@ func (ways *Ways) proposeWay(pathNode *PathTree, maxStations int) bool {
 		return true
 	}
 	for _, way := range ways.Ways {
-		tempWey := *way
+		tempWey := way.fullCopy()
 		addedWay = way.proposeNewWay(pathNode, ways, maxStations)
 		for addedWay {
 			justAdded = true
@@ -108,7 +108,7 @@ func (w *PossibleWay) addNewWay(pathNode *PathTree, ways *Ways) bool {
 // fills TrainMap field in PossibleWay with those trains that have the appropriate arrival station ID (toStation).
 func (w *PossibleWay) addRoutes(pathNode *PathTree, toStation int) {
 	for _, route := range pathNode.Routes {
-		if route.ArrivalStationId == toStation {
+		if route.ArrivalStationId == toStation && pathNode.DepartureId == route.DepartureStationId {
 			if w.TrainMap == nil {
 				w.TrainMap = make(map[int][]Train)
 			}
@@ -131,6 +131,24 @@ func (w *PossibleWay) copy() []int {
 		copiedWay[idx] = item
 	}
 	return copiedWay
+}
+
+// fullCopy - makes full a copy of PossibleWay structure
+func (w *PossibleWay) fullCopy() PossibleWay {
+	var copiedPossibleWay PossibleWay
+	copiedWay := make([]int, len(w.Way))
+	copiedTrainMap := make(map[int][]Train)
+	for idx, item := range w.Way {
+		copiedWay[idx] = item
+	}
+
+	for key, value := range w.TrainMap {
+		copiedTrainMap[key] = DeepTrainSliceCopy(value)
+	}
+
+	copiedPossibleWay.Way = copiedWay
+	copiedPossibleWay.TrainMap = copiedTrainMap
+	return copiedPossibleWay
 }
 
 // isEqual returns true if the station path is the same, otherwise returns false
