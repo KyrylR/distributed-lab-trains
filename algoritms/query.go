@@ -7,7 +7,7 @@ type Query struct {
 }
 
 func (q *Query) Initialize(ways []Ways) error {
-	queryWays := make([]QueryWay, 0)
+	q.allWays = make([]QueryWay, 0)
 	for _, possibleWays := range ways {
 		for _, way := range possibleWays.Ways {
 			newProcessedData := SortTrains{Path: way}
@@ -16,13 +16,12 @@ func (q *Query) Initialize(ways []Ways) error {
 				return err
 			}
 			newQueryWay := QueryWay{processedData: &newProcessedData}
-			queryWays = append(queryWays, newQueryWay)
+			q.allWays = append(q.allWays, newQueryWay)
 		}
 	}
-	for _, way := range queryWays {
-		way.initLowestTime()
+	for i := 0; i < len(q.allWays); i++ {
+		q.allWays[i].initLowestTime()
 	}
-	q.allWays = queryWays
 	return nil
 }
 
@@ -30,15 +29,15 @@ func (q *Query) sortByTime() {
 	less := func(i, j int) bool {
 		first, _ := q.allWays[i].getLowestTime()
 		second, _ := q.allWays[j].getLowestTime()
-		return first < second
+		return first.travelTime < second.travelTime
 	}
 	sort.Slice(q.allWays, less)
 }
 
 func (q *Query) sortByCost() {
 	less := func(i, j int) bool {
-		first, _ := q.allWays[i].getLowestCost()
-		second, _ := q.allWays[j].getLowestCost()
+		first, _, _ := q.allWays[i].getLowestCost()
+		second, _, _ := q.allWays[j].getLowestCost()
 		return first < second
 	}
 	sort.Slice(q.allWays, less)
