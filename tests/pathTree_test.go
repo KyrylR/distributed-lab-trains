@@ -21,4 +21,13 @@ func TestPathTree(t *testing.T) {
 	if len(pathTrees) != 4 {
 		t.Errorf("incorectly determinid home many unique sities in the data, given: %v, should be: %v", len(pathTrees), 4)
 	}
+
+	for _, tree := range pathTrees {
+		for _, route := range tree.Routes {
+			if route.DepartureStationId != tree.DepartureId {
+				t.Errorf("incorectly added route to path, given: %v, should be: %v",
+					route.DepartureStationId, tree.DepartureId)
+			}
+		}
+	}
 }
