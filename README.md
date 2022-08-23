@@ -40,6 +40,7 @@ recorded. Additional structures have been created for this purpose:
 [Link to waitToTrain struct]()
 
 [Link to SortTrains struct]()
+
 8. We find the best route and from station to station, then sort them by time and try to match them with the same 
 structures, if this completes we get the best route, if not, we take the fastest trains, combine them and return them.
 9. At the end we get all the paths ready to be entered. For query by time, we sort the array using GetLowestTime
@@ -59,7 +60,6 @@ The program is invoked according to the scheme:
 ```
 go test -v ./tests
 ```
-
 
 ## Authors
 
