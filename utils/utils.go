@@ -35,7 +35,7 @@ func ParseCsvToTrainStruct(path string) ([]algoritms.Train, error) {
 	for scanner.Scan() {
 		var dataTmp algoritms.Train
 		seperatedValues := strings.Split(re.ReplaceAllString(scanner.Text(), ""), ";")
-		err := parseCsvLine(&dataTmp, seperatedValues)
+		err := ParseCsvLine(&dataTmp, seperatedValues)
 		if err != nil {
 			return nil, err
 		}
@@ -44,8 +44,8 @@ func ParseCsvToTrainStruct(path string) ([]algoritms.Train, error) {
 	return result, nil
 }
 
-// parseCsvLine helps to write the string of data into the Train structure.
-func parseCsvLine(data *algoritms.Train, lines []string) error {
+// ParseCsvLine helps to write the string of data into the Train structure.
+func ParseCsvLine(data *algoritms.Train, lines []string) error {
 	if len(lines) < 6 || len(lines) >= 7 {
 		return errors.New("incorrect split values are given for parsing")
 	}
