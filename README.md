@@ -59,3 +59,12 @@ The program is invoked according to the scheme:
 ```
 go test -v ./tests
 ```
+
+
+## Authors
+
+ex. Kyrylo Riabov [Gmail](kyryl.ryabov@gmail.com)
+
+## License
+
+This project is licensed under the [MIT] License - see the LICENSE.md file for details
