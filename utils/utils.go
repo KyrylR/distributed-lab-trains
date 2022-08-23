@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"errors"
 	"log"
 	"os"
 	"regexp"
@@ -45,6 +46,9 @@ func ParseCsvToTrainStruct(path string) ([]algoritms.Train, error) {
 
 // parseCsvLine helps to write the string of data into the Train structure.
 func parseCsvLine(data *algoritms.Train, lines []string) error {
+	if len(lines) < 6 || len(lines) >= 7 {
+		return errors.New("incorrect split values are given for parsing")
+	}
 	conv, err := strconv.Atoi(lines[0])
 	if err != nil {
 		return err
