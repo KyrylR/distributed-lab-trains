@@ -2,6 +2,8 @@
 
 An assignment from Distributed Lab
 
+This project took a total of 2 full working days
+
 ## Description
 
 Given a timetable for crossing trains between several stations in the following format
@@ -20,7 +22,7 @@ The solution to this problem is divided into several steps:
    2. An array of Train structures is created, where the columns in the file correspond to the fields in that structure.
    3. Parsing itself.
    4. If it fails, the program informs you and terminates its work.
-2. Then we find unique stations, which are present in the given information and provide this information in the following form: 
+2. Then we find unique stations, which are present in the given information and also provide this information in the following form:
 `(map[int][]Train), key - statinId`
 3. Use goroutines to accelerate the BuildPathsGo function; at this point, a pathTree is generated. 
 The pathTree looks like a graph. Structure itself looks like this:
