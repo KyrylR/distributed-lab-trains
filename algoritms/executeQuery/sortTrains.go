@@ -3,6 +3,7 @@ package executeQuery
 import (
 	"errors"
 	"sort"
+	"sync"
 	"time"
 
 	"DistributedLab_Trains/algoritms"
@@ -31,36 +32,35 @@ func (d *SortTrains) SortTimeAndCost() error {
 	if len(d.Path.Way) == 0 {
 		return errors.New("no data provided")
 	}
-	err := d.sortByTime()
-	if err != nil {
-		return err
-	}
-	err = d.sortByCost()
-	if err != nil {
-		return err
-	}
+	d.copyTrainMap()
+
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go d.sortByTime(&wg)
+
+	wg.Add(1)
+	go d.sortByCost(&wg)
+
+	wg.Wait()
 	return nil
 }
 
 // sortByCost - sorts Path.TrainMap by difference in cost for different trains.
-func (d *SortTrains) sortByCost() error {
+func (d *SortTrains) sortByCost(wg *sync.WaitGroup) {
+	defer wg.Done()
 	for _, trains := range d.Path.TrainMap {
 		less := func(i, j int) bool {
 			return trains[i].Cost < trains[j].Cost
 		}
 		sort.Slice(trains, less)
-		if !sort.SliceIsSorted(trains, less) {
-			return errors.New("error occurred, while sorting by cost")
-		}
 	}
-
-	return nil
 }
 
 // sortByTime - sorts TravelTimeMap by difference in arrival and departure times and fills WaitingTimeMap
 // field with fillWaitingTimeMap function.
-func (d *SortTrains) sortByTime() error {
-	d.copyTrainMap()
+func (d *SortTrains) sortByTime(wg *sync.WaitGroup) {
+	defer wg.Done()
 	d.WaitingTimeMap = make(map[int][]waitToTrain)
 
 	for station, trains := range d.TravelTimeMap {
@@ -70,28 +70,20 @@ func (d *SortTrains) sortByTime() error {
 			return first < second
 		}
 		sort.Slice(trains, less)
-		if !sort.SliceIsSorted(trains, less) {
-			return errors.New("error occurred, while sorting by time")
-		}
 		nextStation := findPath.GetNextStation(station, d.Path)
 		if nextStation != -1 {
 			trainsFromNextStation := d.TravelTimeMap[nextStation]
 			for _, train := range trains {
-				err := d.fillWaitingTimeMap(train, trainsFromNextStation)
-				if err != nil {
-					return err
-				}
+				d.fillWaitingTimeMap(train, trainsFromNextStation)
 			}
 		}
 	}
-
-	return nil
 }
 
 // fillWaitingTimeMap takes Train instance and Trains slice, where train.ArrivalId is equal to trains[...].DepartureId;
 // creates slice of waitToTrain structures and sorts it by waitingTime field.
 // Finally, it initializes WaitingTimeMap field of SortTrains structure.
-func (d *SortTrains) fillWaitingTimeMap(train algoritms.Train, trains []algoritms.Train) error {
+func (d *SortTrains) fillWaitingTimeMap(train algoritms.Train, trains []algoritms.Train) {
 	result := make([]waitToTrain, len(trains))
 	for i := 0; i < len(result); i++ {
 		result[i] = newWaitToTrain(train, trains[i])
@@ -100,11 +92,7 @@ func (d *SortTrains) fillWaitingTimeMap(train algoritms.Train, trains []algoritm
 		return result[i].waitingTime < result[j].waitingTime
 	}
 	sort.Slice(result, less)
-	if !sort.SliceIsSorted(result, less) {
-		return errors.New("error occurred, while sorting by waiting time")
-	}
 	d.WaitingTimeMap[train.TrainId] = result
-	return nil
 }
 
 // copyTrainMap - creates a copy of TrainMap, and initializes the TravelTimeMap field.
