@@ -15,13 +15,30 @@ func TestBuildPaths(t *testing.T) {
 		t.Errorf("error occurred when parsing csv file")
 		return
 	}
+	const NumberOfWays = 10
 	paths := findPath.BuildPathsGo(&allTrains)
 	sum := 0
 	for _, path := range paths {
 		sum += len(path.Ways)
 	}
-	if sum != 10 {
-		t.Errorf("incorect number of founded ways, given: %v, should be: %v", sum, 10)
+	if sum != NumberOfWays {
+		t.Errorf("incorect number of founded ways, given: %v, should be: %v", sum, NumberOfWays)
+	}
+	for _, path := range paths {
+		for _, way := range path.Ways {
+			for _, station := range way.Way {
+				if station != way.GetLastStation() {
+					if len(way.TrainMap[station]) != 1 {
+						t.Errorf("incorect number of trains in TrainMap for station: %v, given: %v, should be: %v",
+							station, len(way.TrainMap[station]), 1)
+					}
+				}
+			}
+			if len(way.Way) != 4 {
+				t.Errorf("incorect number of station in way, given: %v, should be: %v",
+					len(way.Way), 4)
+			}
+		}
 	}
 }
 
