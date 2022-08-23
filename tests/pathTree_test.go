@@ -20,13 +20,11 @@ func TestPathTree(t *testing.T) {
 	}
 	NumberOfTrainsThatDepFromStation := []int{2, 3, 3, 1}
 	mappedData := findPath.BuildMappedData(&allTrains)
-	i := 0
-	for _, value := range mappedData {
-		if len(value) != NumberOfTrainsThatDepFromStation[i] {
-			t.Errorf("incorect number of trains fro station calculated, given: %v, should be: %v",
-				len(value), NumberOfTrainsThatDepFromStation[i])
+	for key, value := range mappedData {
+		if len(value) != NumberOfTrainsThatDepFromStation[key-1] {
+			t.Errorf("incorect number of trains for station calculated, given: %v, should be: %v",
+				len(value), NumberOfTrainsThatDepFromStation[key-1])
 		}
-		i += 1
 	}
 	pathTree := findPath.PathTree{DepartureId: 1}
 	treeMap := pathTree.BuildPathTree(uniqueStations, mappedData)
